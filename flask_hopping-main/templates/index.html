@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📡 Secure Wireless Comm</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7fa;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0044cc;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #0044cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #003399;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📡 Secure Wireless Comm Dashboard</h1>
+
+  <!-- 🔐 Text Input -->
+  <form action="/send_text" method="post">
+    <div class="section">
+      <label for="text">💬 Enter Secure Text:</label>
+      <input type="text" id="text" name="text" placeholder="Type your secret message..." required>
+      <button type="submit">🔐 Encrypt & Send</button>
+    </div>
+  </form>
+
+  <!-- 🎵 Audio Upload -->
+  <form action="/upload_audio" method="post" enctype="multipart/form-data">
+    <div class="section">
+      <label for="audio">🎵 Upload Audio File:</label>
+      <input type="file" name="audio" required>
+      <button type="submit">📤 Upload Audio</button>
+    </div>
+  </form>
+
+  <!-- 🛡️ Jamming / Eavesdropping Flags -->
+  <form id="flagsForm">
+    <div class="section">
+      <label>🛡️ Simulate:</label><br />
+      <input type="checkbox" name="simulate_jamming" id="jamming"> Jamming<br />
+      <input type="checkbox" name="simulate_eavesdropping" id="eavesdropping"> Eavesdropping<br /><br />
+      <button type="button" onclick="sendFlags()">Set Flags</button>
+    </div>
+  </form>
+
+  <!-- 🔁 Temporal + Dynamic Hopping Config -->
+  <form action="/set_hopping_config" method="post">
+    <div class="section">
+      <label for="start_freq">📶 Start Frequency (Hz):</label>
+      <input type="number" name="start_freq" required value="1000">
+
+      <label for="hop_interval">⏱️ Hop Interval (sec):</label>
+      <input type="number" step="0.1" name="hop_interval" required value="2.0">
+
+      <button type="submit">💾 Save Hopping Config</button>
+    </div>
+  </form>
+
+  <script>
+    function sendFlags() {
+      const jamming = document.getElementById('jamming').checked;
+      const eavesdropping = document.getElementById('eavesdropping').checked;
+
+      fetch('/set_simulation_flags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          simulate_jamming: jamming,
+          simulate_eavesdropping: eavesdropping
+        })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.status || "Flags updated!"))
+      .catch(err => alert("❌ Error setting flags"));
+    }
+  </script>
+</body>
+</html>
